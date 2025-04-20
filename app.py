@@ -3,12 +3,11 @@ import requests
 import pandas as pd
 from datetime import datetime
 st.set_page_config(page_title="Taxi Fare Prediction", layout="wide")
-st.title('Taxi Fare Prediction  🚕')
+st.title('Taxi Fare Prediction')
 st.markdown("""
 Predict your taxi fare using our machine learning API!
 """)
 st.write("---")
-
 col1, col2 = st.columns(2)
 with col1:
     st.header("Enter Ride Details!")
@@ -22,7 +21,6 @@ with col1:
     dropoff_lon = st.number_input("Dropoff Longitude", value=-73.9352, format="%.6f")
     passenger_count = st.number_input("Passenger Count", min_value=1, max_value=8, value=1)
     predict_button = st.button("Predict Fare")
-
 with col2:
     st.header("Ride Map")
     map_data = pd.DataFrame({
@@ -30,7 +28,6 @@ with col2:
         'lon': [pickup_lon, dropoff_lon],
     })
     st.map(map_data, zoom=12)
-
 if predict_button:
     params = {
         "pickup_datetime": f"{ride_date} {ride_time}",
@@ -41,7 +38,6 @@ if predict_button:
         "passenger_count": passenger_count
     }
     api_url = "https://taxifare.lewagon.ai/predict"
-
     with st.spinner("Calculating fare prediction..."):
         try:
             response = requests.get(api_url, params=params)
@@ -54,5 +50,4 @@ if predict_button:
                 st.error("Failed to get prediction. API returned status code: " + str(response.status_code))
         except requests.exceptions.RequestException as e:
             st.error(f"Error making API request: {e}")
-
 st.write("---")
